@@ -95,7 +95,7 @@ def validation(epoch):
             data, target = data.cuda(), target.cuda()
         data, target = to_gpu(Variable(data, volatile=True), args.cuda), to_gpu(Variable(target), args.cuda)
         output, laterals = model(data, corrupted=False, cuda=args.cuda)
-        validation_loss += F.cross_entropy(output, target).data[0] # no reconstruction loss
+        validation_loss += F.cross_entropy(output, target).item() # no reconstruction loss
         pred = output.data.max(1)[1] # get the index of the max log-probability
         correct += pred.eq(target.data).cpu().sum()
 
@@ -134,7 +134,7 @@ def train(epoch):
         if batch_idx % 10 == 0:
             print('Train Epoch: {} [{}/{} ({:.00f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.data[0]))
+                100. * batch_idx / len(train_loader), loss.item()))
 
     print('Accuracy: {}/{} ({:.2f}%)'.format(
         correct, len(train_loader.dataset),
@@ -176,7 +176,7 @@ def train_semi(epoch):
         if batch_idx % 10 == 0:
             print('Train Epoch: {} [{}/{} ({:.00f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.data[0]))
+                100. * batch_idx / len(train_loader), loss.item()))
 
     print('Accuracy: {}/{} ({:.2f}%)'.format(
         correct, len(train_loader.dataset),
